@@ -1,0 +1,6 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: configuration-rds
+spec:
+  package: xpkg.upbound.io/upbound/configuration-rds:v0.0.2
