@@ -7,33 +7,55 @@ It is bootstrapped from a template repository.
 
 ## Getting Started
 
-In you Upbound Environment, create your `ControlPlane` pointing to this
+Prepare an Upbound Space by following instructions
+[here](https://github.com/upbound-demo/environments-instructions). If you'd like
+to use Vault as your secret store for the Kubeconfig of the `ControlPlane`, make
+sure you install and enable the [secret store feature](https://docs.crossplane.io/knowledge-base/integrations/vault-as-secret-store/#configure-vault-for-crossplane-integration) in your Upbound Space.
+
+In your Upbound Space, create your `ControlPlane` pointing to this
 repository.
 
+Create a `ControlPlane` pointing to this repository.
+```yaml
+apiVersion: mxp.upbound.io/v1alpha1
+kind: ControlPlane
+metadata:
+  name: controlplane-blue
+spec:
 
-1. Enable the alpha source sync feature by passing the following flag
-   during your Upobund Enviornments setup.
-   ```bash
-   helm -n upbound-system upgrade --install mxp oci://us-west1-docker.pkg.dev/orchestration-build/upbound-environments/mxp --version v0.9.3 --wait \
-     --set "controlPlanes.enableSourceSync=true"
-   ```
+  # Requires "up.yaml" to be present.
+  source:
 
-1. Create a `ControlPlane` pointing to this repository.
-   ```yaml
-   apiVersion: mxp.upbound.io/v1alpha1
-   kind: ControlPlane
-   metadata:
-     name: controlplane-blue
-   spec:
-     source: # Alpha feature enabled by a flag.
-       type: Git
-       git:
-         url: https://github.com/upbound-demo/controlplane-blue
-       ref:
-         branch: main
-     backup:
-       schedule: '* * * * 15'
-     writeConnectionSecretToRef:
-       name: kubeconfig-dev
-       namespace: upbound-system
-   ```
+    # Can have "type: Image" as option in future.
+    type: Git
+    git:
+      url: https://github.com/upbound-demo/controlplane-blue
+      ref:
+        branch: main
+
+  # Publishes to an external secret store like Vault.
+  publishConnectionDetailsTo:
+    name: kubeconfig-controlplane-blue
+    configRef:
+      name: vault
+    metadata:
+      labels:
+        environment: development
+        team: backend
+```
+
+## Developing
+
+This is a `ControlPlaneSource` repo, which means that it contains the source of
+truth for configuring a control plane. If you'd like to share this with another
+control plane, follow the instructions below:
+
+1. Fork this repository.
+1. Replace the instances of the IAM Role ARN with the one that's assigned to
+   your new control plane, `arn:aws:iam::609897127049:role/icp-production-control-plane`
+   * [`providers/aws/controllerconfig.yaml`](providers/aws/controllerconfig.yaml)
+1. Replace the instances where the control plane name is mentioned, `controlplane-blue`
+   * [`environment/secretstore.yaml`](environment/secretstore.yaml)
+   * [`environment/environmentconfig.yaml`](environment/environmentconfig.yaml)
+1. Make sure the image pull secret mentioned in `Provider` and `Configuration`
+   manifests are replaced by the one that exists in your control plane 

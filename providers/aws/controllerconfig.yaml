@@ -4,12 +4,6 @@ metadata:
   name: irsa
   annotations:
     eks.amazonaws.com/role-arn: arn:aws:iam::609897127049:role/icp-production-control-plane
-spec: {}
----
-apiVersion: aws.upbound.io/v1beta1
-kind: ProviderConfig
-metadata:
-  name: default
 spec:
-  credentials:
-    source: IRSA
+  args:
+    - --enable-external-secret-stores

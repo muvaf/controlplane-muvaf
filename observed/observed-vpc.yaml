@@ -3,7 +3,7 @@ kind: VPC
 metadata:
   name: example
   annotations:
-    crossplane.io/external-name: myvpc
+    crossplane.io/external-name: vpc-23123213
 spec:
   managementPolicy: Observe
   forProvider:
