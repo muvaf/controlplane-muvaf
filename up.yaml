@@ -11,13 +11,13 @@ spec:
   rootPath: /
   #
   # (Future) Pull secrets from external sources like Vault.
-  externalResources:
-    - source:
-        type: Vault
-        vault:
-          url: https://local.acme.org/vault/pull-secret
-      type: Secret
-      secret:
-        metadata:
-          name: internal-pull-secret
-          namespace: upbound-system
+  # externalResources:
+  #   - source:
+  #       type: Vault
+  #       vault:
+  #         url: https://local.acme.org/vault/pull-secret
+  #     type: Secret
+  #     secret:
+  #       metadata:
+  #         name: internal-pull-secret
+  #         namespace: upbound-system
