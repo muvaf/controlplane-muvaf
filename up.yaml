@@ -10,6 +10,7 @@ spec:
   # rootPath tells where to scan recursively where only YAML files are included.
   rootPath: /
   #
+  #
   # (Future) Pull secrets from external sources like Vault.
   # externalResources:
   #   - source:
